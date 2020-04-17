@@ -97,6 +97,7 @@ def main():
     data = pollen_data(pollen_forecast)
     if len(data) == 0:
         lgg.info("No significant info")
+        return
     else:
         lgg.info("Forecast of significance found")
         df = pd.DataFrame(data).to_html()
