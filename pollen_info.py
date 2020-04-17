@@ -89,19 +89,25 @@ def pollen_data(pollen_forecast):
     return data_to_keep
 
 
-def main():
+def main(filter=True):
     pollen_forecast = get_pollen_forecast()
+
     if len(pollen_forecast) == 0:
         lgg.info("No pollen forecasts found")
         return
-    data = pollen_data(pollen_forecast)
-    if len(data) == 0:
+
+    if filter:
+        data = pollen_data(pollen_forecast)
+    else:
+        data = pollen_forecast
+
+    if len(data) == 1:
         lgg.info("No significant info")
         return
+
     else:
         lgg.info("Forecast of significance found")
         df = pd.DataFrame(data).to_html()
-
         # create and send email
         email_credentials = get_email_credentials()
         receiver_email = email_credentials["receiver_email"]
@@ -125,4 +131,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(filter=False)
