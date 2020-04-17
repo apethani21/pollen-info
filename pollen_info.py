@@ -1,6 +1,6 @@
 import os
-import ssl
 import json
+import smtplib
 import requests
 import pandas as pd
 import logging as lgg
@@ -77,7 +77,6 @@ def get_pollen_forecast():
 
 
 def pollen_data(pollen_forecast):
-    day = datetime.today().day
     data_to_keep = {}
     for pollen_type, value in pollen_forecast.items():
         if pollen_type == "Overall":
@@ -88,7 +87,7 @@ def pollen_data(pollen_forecast):
                     data_to_keep[pollen_type] = value
                     break
     return data_to_keep
-            
+
 
 def main():
     pollen_forecast = get_pollen_forecast()
@@ -112,8 +111,6 @@ def main():
         message["From"] = sender_email
         message["To"] = receiver_email
         message.attach(html_main)
-        password = email_credentials["sender_password"]
-        context = ssl.create_default_context()
         aws_ses_credentials = get_aws_ses_credentials()
         smtp_username = aws_ses_credentials["smtp-username"]
         smtp_password = aws_ses_credentials["smtp-password"]
