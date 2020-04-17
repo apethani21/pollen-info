@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 
 def get_pollen_forecast():
-    url = 'https://www.avogel.co.uk/health/hayfever/pollen-forecast/london/'
+    url = 'https://www.avogel.co.uk/health/hayfever/pollen-forecast/london/north-london'
     r = requests.get(url, timeout=1)
     html = r.content.decode()
     soup = BeautifulSoup(html, 'html.parser')
