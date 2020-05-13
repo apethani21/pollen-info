@@ -1,4 +1,5 @@
 import os
+import bs4
 import json
 import smtplib
 import requests
@@ -34,6 +35,20 @@ def get_aws_ses_credentials():
     with open(f"{home}/keys/aws/ses-credentials.json", "r") as f:
         config = json.loads(f.read())
     return config
+
+
+def get_pollen_and_pollution():
+    "From BBC Weather, for Hendon."
+    r = requests.get("https://www.bbc.co.uk/weather/2647116")
+    html = r.content.decode()
+    soup = BeautifulSoup(html, 'html.parser')
+    pollen_info = soup.find("span", {"class": "wr-c-environmental-data__item--pollen"})
+    pollen_info = [i.contents[0] for i in pollen_info]
+    pollen_info = [str(i) for i in pollen_info if isinstance(i, bs4.element.NavigableString)]
+    pollution_info = soup.find("span", {"class": "wr-c-environmental-data__item--pollution"})
+    pollution_info = [i.contents[0] for i in pollution_info]
+    pollution_info = [str(i) for i in pollution_info if isinstance(i, bs4.element.NavigableString)]
+    return dict([pollen_info, pollution_info])
 
 
 def get_pollen_info(url):
