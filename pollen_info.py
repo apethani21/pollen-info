@@ -52,6 +52,7 @@ def get_pollen_and_pollution():
 
 
 def bbc_info_to_html(info):
+    colour_map = {'Low': '#2dc937', 'Medium': '	#e7b416', 'High': '#cc3232'}
     return f"""
             <body>
                 <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
@@ -132,13 +133,16 @@ def main(filter=True):
     else:
         lgg.info("Forecast of significance found")
         df = pd.DataFrame(data).to_html()
+        bbc_info = get_pollen_and_pollution()
+        bbc_info_html = bbc_info_to_html(bbc_info)
+        html = f"{df}<br><br>{bbc_info_html}"
         # create and send email
         email_credentials = get_email_credentials()
         receiver_email = email_credentials["receiver_email"]
         sender_email = email_credentials["sender_email"]
         message = MIMEMultipart("alternative")
         message["Subject"] = f"Pollen update - {datetime.now().strftime('%a %d %b %y')}"
-        html_main = MIMEText(df, "html")
+        html_main = MIMEText(html, "html")
         message["From"] = sender_email
         message["To"] = receiver_email
         message.attach(html_main)
