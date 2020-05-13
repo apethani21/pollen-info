@@ -54,10 +54,8 @@ def get_pollen_and_pollution():
 def bbc_info_to_html(info):
     colour_map = {'Low': '#2dc937', 'Medium': '	#e7b416', 'High': '#cc3232'}
     return f"""
-            <body>
-                <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
-                <b> Pollution: </b><span style="color:{colour_map[info['Pollution']]}">{info['Pollution']}</span>
-            </body
+            <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
+            <b> Pollution: </b><span style="color:{colour_map[info['Pollution']]}">{info['Pollution']}</span>
             """
 
 
@@ -135,6 +133,11 @@ def main(filter=True):
         df = pd.DataFrame(data).to_html()
         bbc_info = get_pollen_and_pollution()
         bbc_info_html = bbc_info_to_html(bbc_info)
+        html = f"""
+        {df}<br><br>
+        <b>BBC Information</b><br>
+        {bbc_info_html}
+        """
         html = f"{df}<br><br>{bbc_info_html}"
         # create and send email
         email_credentials = get_email_credentials()
