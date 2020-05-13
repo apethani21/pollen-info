@@ -51,6 +51,15 @@ def get_pollen_and_pollution():
     return dict([pollen_info, pollution_info])
 
 
+def bbc_info_to_html(info):
+    return f"""
+            <body>
+                <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
+                <b> Pollution: </b><span style="color:{colour_map[info['Pollution']]}">{info['Pollution']}</span>
+            </body
+            """
+
+
 def get_pollen_info(url):
     r = requests.get(url, timeout=1)
     html = r.content.decode()
