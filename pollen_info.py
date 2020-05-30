@@ -52,7 +52,10 @@ def get_pollen_and_pollution():
 
 
 def bbc_info_to_html(info):
-    colour_map = {'Low': '#2dc937', 'Moderate': '#e7b416', 'High': '#cc3232'}
+    colour_map = {'Low': '#2dc937',
+                  'Moderate': '#e7b416',
+                  'High': '#cc3232',
+                  'Very High': '#ffffff'}
     return f"""
             <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
             <b> Pollution: </b><span style="color:{colour_map[info['Pollution']]}">{info['Pollution']}</span>
