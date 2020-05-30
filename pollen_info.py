@@ -55,7 +55,7 @@ def bbc_info_to_html(info):
     colour_map = {'Low': '#2dc937',
                   'Moderate': '#e7b416',
                   'High': '#cc3232',
-                  'Very High': '#ffffff'}
+                  'Very High': '#ff0000'}
     return f"""
             <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
             <b> Pollution: </b><span style="color:{colour_map[info['Pollution']]}">{info['Pollution']}</span>
