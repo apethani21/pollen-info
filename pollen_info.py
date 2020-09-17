@@ -42,12 +42,18 @@ def get_pollen_and_pollution():
     r = requests.get("https://www.bbc.co.uk/weather/2647116")
     html = r.content.decode()
     soup = BeautifulSoup(html, 'html.parser')
-    pollen_info = soup.find("span", {"class": "wr-c-environmental-data__item--pollen"})
-    pollen_info = [i.contents[0] for i in pollen_info]
-    pollen_info = [str(i) for i in pollen_info if isinstance(i, bs4.element.NavigableString)]
-    pollution_info = soup.find("span", {"class": "wr-c-environmental-data__item--pollution"})
-    pollution_info = [i.contents[0] for i in pollution_info]
-    pollution_info = [str(i) for i in pollution_info if isinstance(i, bs4.element.NavigableString)]
+    try:
+        pollen_info = soup.find("span", {"class": "wr-c-environmental-data__item--pollen"})
+        pollen_info = [i.contents[0] for i in pollen_info]
+        pollen_info = [str(i) for i in pollen_info if isinstance(i, bs4.element.NavigableString)]
+    except TypeError:
+        pollen_info = ["Pollen", "No info found"]
+    try:
+        pollution_info = soup.find("span", {"class": "wr-c-environmental-data__item--pollution"})
+        pollution_info = [i.contents[0] for i in pollution_info]
+        pollution_info = [str(i) for i in pollution_info if isinstance(i, bs4.element.NavigableString)]
+    except TypeError:
+        pollution_info = ["Pollution", "No info found"]
     return dict([pollen_info, pollution_info])
 
 
@@ -57,8 +63,8 @@ def bbc_info_to_html(info):
                   'High': '#cc3232',
                   'Very High': '#ff0000'}
     return f"""
-            <b> Pollen: </b><span style="color:{colour_map[info['Pollen']]}">{info['Pollen']}</span><br>
-            <b> Pollution: </b><span style="color:{colour_map[info['Pollution']]}">{info['Pollution']}</span>
+            <b> Pollen: </b><span style="color:{colour_map.get(info['Pollen'], '#000000')}">{info['Pollen']}</span><br>
+            <b> Pollution: </b><span style="color:{colour_map.get(info['Pollution'], '#000000')}">{info['Pollution']}</span>
             """
 
 
@@ -137,11 +143,11 @@ def main(filter=True):
         bbc_info = get_pollen_and_pollution()
         bbc_info_html = bbc_info_to_html(bbc_info)
         html = f"""
-        {df}<br><br>
+        <b>Avogel Information</b><br>
+        {df}<br>
         <b>BBC Information</b><br>
         {bbc_info_html}
         """
-        html = f"{df}<br><br>{bbc_info_html}"
         # create and send email
         email_credentials = get_email_credentials()
         receiver_email = email_credentials["receiver_email"]
