@@ -139,7 +139,10 @@ def main(filter=True):
 
     else:
         lgg.info("Forecast of significance found")
-        df = pd.DataFrame(data).to_html()
+        df = pd.DataFrame(data)
+        today = pd.to_datetime("today").date().strftime("%a %d")
+        style_map = lambda row: ['font-weight: bold']*8 if row.name == today else ['']*8
+        df = df.style.apply(style_map, axis='columns').render()
         bbc_info = get_pollen_and_pollution()
         bbc_info_html = bbc_info_to_html(bbc_info)
         html = f"""
