@@ -69,7 +69,7 @@ def bbc_info_to_html(info):
 
 
 def get_pollen_info(url):
-    r = requests.get(url, timeout=1)
+    r = requests.get(url, timeout=5)
     html = r.content.decode()
     soup = BeautifulSoup(html, 'html.parser')
     pollen_table = soup.find_all("tr")
